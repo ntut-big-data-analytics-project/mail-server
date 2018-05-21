@@ -58,7 +58,7 @@ public class MessageListMapper {
                 recipientString,
                 entity.getSubject(),
                 entity.getHasAttachments(),
-                entity.getIsGarbage());
+                entity.getIsSpam());
     }
 
 

@@ -43,7 +43,7 @@ public class Message {
     private final String         rawMessage;
     private final List<String>   recipients;
     private final MessageHeaders headers;
-    private boolean              isGarbage;
+    private boolean isSpam;
 
 
 
@@ -62,7 +62,7 @@ public class Message {
         this.rawMessage = rawMessage;
         this.recipients = recipients;
         this.headers = headers;
-        this.isGarbage = false;
+        this.isSpam = false;
     }
 
     public long getMessageId() {
@@ -93,12 +93,12 @@ public class Message {
         return messageSize;
     }
 
-    public boolean getIsGarbage() {
-        return isGarbage;
+    public boolean getIsSpam() {
+        return isSpam;
     }
 
-    public void setIsGarbage(boolean isGarbage) {
-        this.isGarbage = isGarbage;
+    public void setIsSpam(boolean isSpam) {
+        this.isSpam = isSpam;
     }
 
     public String getRawMessage() {

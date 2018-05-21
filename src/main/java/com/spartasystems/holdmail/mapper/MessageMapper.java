@@ -51,7 +51,7 @@ public class MessageMapper {
                                     .collect(Collectors.toSet()));
 
         entity.setHasAttachments(!message.getContent().findAttachmentParts(false).isEmpty());
-        entity.setIsGarbage(message.getIsGarbage());
+        entity.setIsSpam(message.getIsSpam());
         return entity;
 
     }
@@ -77,7 +77,7 @@ public class MessageMapper {
                 recipients,
                 headers
         );
-        m.setIsGarbage(entity.getIsGarbage());
+        m.setIsSpam(entity.getIsSpam());
         return m;
     }
 

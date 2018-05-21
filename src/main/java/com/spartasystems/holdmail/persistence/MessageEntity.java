@@ -77,8 +77,8 @@ public class MessageEntity {
     @Column(name = "has_attachments")
     private boolean hasAttachments;
 
-    @Column(name = "is_garbage")
-    private boolean isGarbage;
+    @Column(name = "is_spam")
+    private boolean isSpam;
 
     @NotNull
     @Column(name = "message_size")
@@ -148,12 +148,12 @@ public class MessageEntity {
         this.hasAttachments = hasAttachments;
     }
 
-    public boolean getIsGarbage() {
-        return isGarbage;
+    public boolean getIsSpam() {
+        return isSpam;
     }
 
-    public void setIsGarbage(boolean isGarbage) {
-        this.isGarbage = isGarbage;
+    public void setIsSpam(boolean isSpam) {
+        this.isSpam = isSpam;
     }
 
     public int getMessageSize() {
