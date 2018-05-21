@@ -31,5 +31,4 @@ public class HoldMailApplication {
         SpringApplication.run(HoldMailApplication.class, args);
     }
 
-
 }

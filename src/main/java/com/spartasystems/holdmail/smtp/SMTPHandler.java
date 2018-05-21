@@ -106,6 +106,7 @@ public class SMTPHandler implements MessageHandler {
                     headers
             );
 
+            message.setIsGarbage(false);
             messageService.saveMessage(message);
 
             logger.info(String.format("Stored SMTP message '%s' parse %s to: %s",

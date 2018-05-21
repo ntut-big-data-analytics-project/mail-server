@@ -31,14 +31,16 @@ public class MessageListItem {
     private String recipients;
     private String subject;
     private boolean hasAttachments;
+    private boolean isGarbage;
 
-    public MessageListItem(long messageId, long receivedDate, String senderEmail, String recipients, String subject, boolean hasAttachments) {
+    public MessageListItem(long messageId, long receivedDate, String senderEmail, String recipients, String subject, boolean hasAttachments, boolean isGarbage) {
         this.messageId = messageId;
         this.receivedDate = receivedDate;
         this.senderEmail = senderEmail;
         this.recipients = recipients;
         this.subject = subject;
         this.hasAttachments = hasAttachments;
+        this.isGarbage = isGarbage;
     }
 
     public long getMessageId() {
@@ -63,6 +65,10 @@ public class MessageListItem {
 
     public boolean getHasAttachments() {
         return hasAttachments;
+    }
+
+    public boolean getIsGarbage() {
+        return isGarbage;
     }
 
     @Override

@@ -57,7 +57,8 @@ public class MessageListMapper {
                 entity.getSenderEmail(),
                 recipientString,
                 entity.getSubject(),
-                entity.getHasAttachments());
+                entity.getHasAttachments(),
+                entity.getIsGarbage());
     }
 
 

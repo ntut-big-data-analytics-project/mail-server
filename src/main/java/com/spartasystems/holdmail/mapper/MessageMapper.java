@@ -51,6 +51,7 @@ public class MessageMapper {
                                     .collect(Collectors.toSet()));
 
         entity.setHasAttachments(!message.getContent().findAttachmentParts(false).isEmpty());
+        entity.setIsGarbage(message.getIsGarbage());
         return entity;
 
     }
@@ -65,7 +66,7 @@ public class MessageMapper {
                                         .map(MessageRecipientEntity::getRecipientEmail)
                                         .collect(Collectors.toList());
 
-        return new Message(entity.getMessageId(),
+        Message m = new Message(entity.getMessageId(),
                 entity.getIdentifier(),
                 entity.getSubject(),
                 entity.getSenderEmail(),
@@ -76,7 +77,8 @@ public class MessageMapper {
                 recipients,
                 headers
         );
-
+        m.setIsGarbage(entity.getIsGarbage());
+        return m;
     }
 
 }

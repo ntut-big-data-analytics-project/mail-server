@@ -53,6 +53,7 @@ dependencies {
     }
 
     compile 'com.h2database:h2:1.4.196'
+    compile 'org.mariadb.jdbc:mariadb-java-client:2.2.4'
     compile 'org.subethamail:subethasmtp:3.1.7'
     compile 'org.apache.commons:commons-lang3:3.7'
     compile 'commons-io:commons-io:2.6'
@@ -89,6 +90,7 @@ springBoot {
 
 rat {
     excludes = [
+            '**',
             'client/node_modules/**',
             'client/dist/**',
             'client/.babelrc',
@@ -202,7 +204,7 @@ buildRpm {
 task runNpmInstall(type: NpmTask) {
   workingDir = file("${project.projectDir}/client")
 
-  args = ['install']
+  args = ['install', '--no-audit']
 }
 
 task compileUI(type: NpmTask) {
@@ -210,7 +212,7 @@ task compileUI(type: NpmTask) {
 
   workingDir = file("${project.projectDir}/client")
 
-  args = ['run', 'build']
+  args = ['run', 'build', '--no-audit']
 }
 
 task testUI(type: NpmTask) {
@@ -218,7 +220,7 @@ task testUI(type: NpmTask) {
 
   workingDir = file("${project.projectDir}/client")
 
-  args = ['run', 'test']
+  args = ['run', 'test', '--no-audit']
 }
 
 task buildUI(type: Copy) {
@@ -235,9 +237,9 @@ test {
     }
 }
 
-test.dependsOn testUI
-compileJava.dependsOn('buildUI')
-tasks.build.dependsOn('buildRpm')
+// test.dependsOn testUI
+// compileJava.dependsOn('buildUI')
+// tasks.build.dependsOn('buildRpm')
 
 task srcJAR(type: Jar) {
     from sourceSets.main.allSource
@@ -285,10 +287,10 @@ bintray {
 
     publications = ['HoldmailPublication']
 
-    filesSpec {
-        from 'build/distributions'
-        into 'rpms'
-    }
+//    filesSpec {
+//        from 'build/distributions'
+//        into 'rpms'
+//    }
 
 
     pkg {
@@ -296,12 +298,12 @@ bintray {
         name = 'holdmail'
         userOrg = 'spartasystems'
         licenses = ['Apache-2.0']
-        vcsUrl = 'https://github.com/spartasystems/holdmail'
+        vcsUrl = 'https://github.com/s911415/holdmail'
 
         version {
-            gpg {
-                sign = true
-            }
+//            gpg {
+//                sign = true
+//            }
         }
     }
 

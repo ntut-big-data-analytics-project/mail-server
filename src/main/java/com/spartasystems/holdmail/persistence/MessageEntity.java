@@ -77,6 +77,9 @@ public class MessageEntity {
     @Column(name = "has_attachments")
     private boolean hasAttachments;
 
+    @Column(name = "is_garbage")
+    private boolean isGarbage;
+
     @NotNull
     @Column(name = "message_size")
     private int messageSize;
@@ -143,6 +146,14 @@ public class MessageEntity {
 
     public void setHasAttachments(boolean hasAttachments) {
         this.hasAttachments = hasAttachments;
+    }
+
+    public boolean getIsGarbage() {
+        return isGarbage;
+    }
+
+    public void setIsGarbage(boolean isGarbage) {
+        this.isGarbage = isGarbage;
     }
 
     public int getMessageSize() {
