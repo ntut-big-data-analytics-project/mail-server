@@ -25,6 +25,7 @@ Vue.config.productionTip = false
 require('bootstrap/dist/css/bootstrap.min.css')
 require('font-awesome/css/font-awesome.min.css')
 require('bootstrap-vue/dist/bootstrap-vue.css')
+require('./assets/style.css')
 
 /* eslint-disable no-new */
 new Vue({

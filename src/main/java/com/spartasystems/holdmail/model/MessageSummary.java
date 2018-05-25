@@ -41,10 +41,12 @@ public class MessageSummary {
     private final Map<String, String>     messageHeaders;
     private final String                  messageBodyText;
     private final String                  messageBodyHTML;
+    private final boolean                 isSpam;
     private final List<MessageAttachment> attachments;
 
     public MessageSummary(long messageId, String identifier, String subject, String senderEmail,
             Date receivedDate, String senderHost, int messageSize, String recipients,
+            boolean isSpam,
             Map<String, String> messageHeaders, String messageBodyText, String messageBodyHTML,
             List<MessageAttachment> attachments) {
         this.messageId = messageId;
@@ -58,6 +60,7 @@ public class MessageSummary {
         this.messageHeaders = messageHeaders;
         this.messageBodyText = messageBodyText;
         this.messageBodyHTML = messageBodyHTML;
+        this.isSpam = isSpam;
         this.attachments = attachments;
     }
 
@@ -79,6 +82,10 @@ public class MessageSummary {
 
     public Date getReceivedDate() {
         return receivedDate;
+    }
+
+    public boolean getIsSpam() {
+        return isSpam;
     }
 
     public String getSenderHost() {

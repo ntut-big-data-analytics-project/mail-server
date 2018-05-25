@@ -92,7 +92,7 @@ public class MessageSummaryMapperTest {
     public void shouldMapToMessageSummary() {
 
         MessageSummary expected = new MessageSummary(MESSAGE_ID, IDENTIFIER, SUBJECT, SENDER_MAIL,
-                RECEIVED, SENDER_HOST, MESSAGE_SIZE, "recip1,recip2",
+                RECEIVED, SENDER_HOST, MESSAGE_SIZE, "recip1,recip2", false,
                 HEADER_VALS, CONTENT_TXT, CONTENT_HTML_PROCESSED, Collections.emptyList());
 
         MessageSummary actual = messageSummaryMapperSpy.toMessageSummary(MESSAGE_SPY);

@@ -101,7 +101,7 @@ public class MessageServiceTest {
         List<MessageEntity> entities = asList(mock(MessageEntity.class), mock(MessageEntity.class));
         MessageList messageListMock = mock(MessageList.class);
 
-        when(messageRepositoryMock.findAllByOrderByReceivedDateDesc(pageableMock)).thenReturn(entities);
+        when(messageRepositoryMock.findAllByOrderByReceivedDateDesc(-1, pageableMock)).thenReturn(entities);
         when(messageListMapper.toMessageList(entities)).thenReturn(messageListMock);
 
         assertThat(messageService.findMessages(null, pageableMock)).isEqualTo(messageListMock);
@@ -114,7 +114,7 @@ public class MessageServiceTest {
         List<MessageEntity> entities = asList(mock(MessageEntity.class), mock(MessageEntity.class));
         MessageList messageListMock = mock(MessageList.class);
 
-        when(messageRepositoryMock.findAllForRecipientOrderByReceivedDateDesc(SENDER_EMAIL, pageableMock))
+        when(messageRepositoryMock.findAllForRecipientOrderByReceivedDateDesc(-1, SENDER_EMAIL, pageableMock))
                 .thenReturn(entities);
         when(messageListMapper.toMessageList(entities)).thenReturn(messageListMock);
 

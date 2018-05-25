@@ -84,7 +84,7 @@ public class MessageSummaryTest {
 
     private MessageSummary buildSummary(String html, String text) {
         return new MessageSummary(ID, IDENTIFIER, SUBJECT, SENDER,
-                RECIEVED, SENDERHOST, SIZE, RECIPIENTS,
+                RECIEVED, SENDERHOST, SIZE, RECIPIENTS, false,
                 HEADERS, text, html, ATTACHMENTS);
     }
 

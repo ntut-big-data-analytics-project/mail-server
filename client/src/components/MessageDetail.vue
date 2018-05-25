@@ -21,11 +21,14 @@
     <b-alert id="forward-alert" :show="dismissCountDown" variant="success" @dismiss-count-down="countDownChanged">
       Mail {{ message.messageId }} successfully sent to <strong>{{ forwardRecipient }}</strong>
     </b-alert>
+
     <b-alert id="forward-error" :show="validationError" variant="danger">
       {{errors.first('forwardEmail')}}
     </b-alert>
     <b-card header-tag="header" class="details-container">
-      <div slot="header" class="d-flex flex-row p-1">
+      <div slot="header" class="d-flex flex-row p-1" :class="{
+      'bg-danger spam': message.isSpam===true
+      }">
         <router-link to="/" class="d-flex">
           <b-button id="backButton" size="sm" variant="primary">
             <span class="fa fa-arrow-left" aria-hidden="true"></span>
@@ -33,14 +36,14 @@
         </router-link>
         <h4 class="pl-2 message-subject">{{ message.subject }}</h4>
         <div>
-        <div class="forward-group input-group">
-          <input v-model="forwardRecipient" v-validate="'required|email'"
-            type="email" name="forwardEmail" placeholder="Forward to..." class="form-control"></input>
-          <b-button id="fwdButton" size="sm" variant="primary" @click="forwardMail">
-            Forward
-            <span class="fa fa-forward" aria-hidden="true"></span>
-          </b-button>
-        </div>
+        <!--<div class="forward-group input-group">-->
+          <!--<input v-model="forwardRecipient" v-validate="'required|email'"-->
+            <!--type="email" name="forwardEmail" placeholder="Forward to..." class="form-control"></input>-->
+          <!--<b-button id="fwdButton" size="sm" variant="primary" @click="forwardMail">-->
+            <!--Forward-->
+            <!--<span class="fa fa-forward" aria-hidden="true"></span>-->
+          <!--</b-button>-->
+        <!--</div>-->
       </div>
       </div>
       <table class="table table-sm table-condensed addresses">
@@ -66,16 +69,16 @@
           </tr>
       </table>
       <b-tabs :no-fade="true" ref="tabs">
-        <b-tab id="html-body" title="HTML Body" :disabled="!message.messageHasBodyHTML">
+        <b-tab id="html-body" title="HTML" :disabled="!message.messageHasBodyHTML">
             <!-- <mail-metadata :message="message"></mail-metadata> -->
             <iframe class="mail-summary-content mail-summary-content-html" :srcdoc="messageHTML"></iframe>
         </b-tab>
-        <b-tab id="html-text" title="Text Body" :disabled="!message.messageHasBodyText">
+        <b-tab id="html-text" title="Text" :disabled="!message.messageHasBodyText">
             <!-- <mail-metadata :message="message"></mail-metadata> -->
             <div class="mail-summary-content mail-summary-content-pre">{{message.messageBodyText}}</div>
         </b-tab>
-        <b-tab id="original-message" title="Original Content">
-          <iframe class="mail-summary-content mail-summary-content-pre mail-summary-content-raw" :src="messageRawEndpoint"></iframe>
+        <b-tab id="original-message" title="Raw">
+          <div class="mail-summary-content mail-summary-content-pre">{{rawText}}</div>
         </b-tab>
       </b-tabs>
     </b-card>
@@ -102,7 +105,8 @@ export default {
       busyForwarding: false,
       forwardRecipient: '',
       errorContent: null,
-      validationError: false
+      validationError: false,
+      rawText: '',
     }
   },
   filters: {
@@ -117,7 +121,14 @@ export default {
       })
       .catch(() => {
         console.log('Service failed to query message detail')
+      });
+    messagesApi.getMessageRaw(messageId)
+      .then((response) => {
+        this.rawText = response.data
       })
+      .catch(() => {
+        console.log('Service failed to query message detail')
+      });
   },
   watch: {
     message () {

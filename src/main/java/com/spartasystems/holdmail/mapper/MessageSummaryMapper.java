@@ -58,6 +58,7 @@ public class MessageSummaryMapper {
                 message.getSenderHost(),
                 message.getMessageSize(),
                 StringUtils.join(message.getRecipients(), ","),
+                message.getIsSpam(),
                 message.getHeaders().asMap(),
                 messageContent.findFirstTextPart(),
                 htmlPreprocessor.preprocess(message.getMessageId(), messageContent.findFirstHTMLPart()),

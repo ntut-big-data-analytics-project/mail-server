@@ -21,8 +21,8 @@ import axios from 'axios'
 const MESSAGES_ENDPOINT = '/rest/messages'
 
 export default {
-  getMessageList (size, page, recipientEmail) {
-    let params = { size, page }
+  getMessageList (size, page, recipientEmail, mode = 3) {
+    let params = { size, page, mode }
 
     if (recipientEmail) {
       params.recipient = recipientEmail
@@ -34,6 +34,9 @@ export default {
     const url = `${MESSAGES_ENDPOINT}/${messageId}`
 
     return axios.get(url)
+  },
+  getMessageRaw (messageId) {
+    return axios.get(this.getMessageRAWEndpoint(messageId), {responseType: 'text'})
   },
   getMessageRAWEndpoint (messageId) {
     return `${MESSAGES_ENDPOINT}/${messageId}/raw`

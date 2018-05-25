@@ -32,12 +32,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -60,9 +55,9 @@ public class MessageController {
     @RequestMapping()
     public MessageList getMessages(
             @RequestParam(name = "recipient", required = false) @Email String recipientEmail,
+            @RequestParam(name = "mode", required = false, defaultValue = "-1") Integer mode,
             Pageable pageRequest) {
-
-        return messageService.findMessages(recipientEmail, pageRequest);
+        return messageService.findMessages(recipientEmail, mode, pageRequest);
     }
 
     @RequestMapping(value = "/{messageId}", method = RequestMethod.DELETE)
@@ -102,20 +97,20 @@ public class MessageController {
 
     @RequestMapping(value = "/{messageId}/content/{contentId}")
     public ResponseEntity getMessageContentByPartId(@PathVariable("messageId") long messageId,
-            @PathVariable("contentId") String contentId) {
+                                                    @PathVariable("contentId") String contentId) {
 
         Message message = messageService.getMessage(messageId);
 
         MessageContentPart content = message.getContent().findByContentId(contentId);
 
         return ResponseEntity.ok()
-                             .header("Content-Type", content.getContentType())
-                             .body(new InputStreamResource(content.getContentStream()));
+                .header("Content-Type", content.getContentType())
+                .body(new InputStreamResource(content.getContentStream()));
     }
 
     @RequestMapping(value = "/{messageId}/att/{attId}")
     public ResponseEntity getMessageContentByAttachmentId(@PathVariable("messageId") long messageId,
-            @PathVariable("attId") int attId) {
+                                                          @PathVariable("attId") int attId) {
 
         Message message = messageService.getMessage(messageId);
 
@@ -123,19 +118,19 @@ public class MessageController {
 
         String disposition = "attachment;";
 
-        if(StringUtils.isNotBlank(content.getAttachmentFilename())) {
+        if (StringUtils.isNotBlank(content.getAttachmentFilename())) {
             disposition += " filename=\"" + content.getAttachmentFilename() + "\";";
         }
 
         return ResponseEntity.ok()
-                             .header("Content-Type", content.getContentType())
-                             .header("Content-Disposition", disposition)
-                             .body(new InputStreamResource(content.getContentStream()));
+                .header("Content-Type", content.getContentType())
+                .header("Content-Disposition", disposition)
+                .body(new InputStreamResource(content.getContentStream()));
     }
 
     @RequestMapping(value = "/{messageId}/forward", method = RequestMethod.POST)
     public ResponseEntity fowardMail(@PathVariable("messageId") long messageId,
-            @Valid @RequestBody MessageForwardCommand forwardCommand)  {
+                                     @Valid @RequestBody MessageForwardCommand forwardCommand) {
 
         messageService.forwardMessage(messageId, forwardCommand.getRecipient());
 

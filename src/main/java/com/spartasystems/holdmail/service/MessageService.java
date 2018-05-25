@@ -71,14 +71,17 @@ public class MessageService {
     }
 
     public MessageList findMessages(@Null @Email String recipientEmail, Pageable pageRequest) {
+        return findMessages(recipientEmail, -1, pageRequest);
+    }
+
+    public MessageList findMessages(@Null @Email String recipientEmail, Integer mode, Pageable pageRequest) {
 
         List<MessageEntity> entities;
 
         if (StringUtils.isBlank(recipientEmail)) {
-            entities = messageRepository.findAllByOrderByReceivedDateDesc(pageRequest);
-        }
-        else {
-            entities = messageRepository.findAllForRecipientOrderByReceivedDateDesc(recipientEmail, pageRequest);
+            entities = messageRepository.findAllByOrderByReceivedDateDesc(mode, pageRequest);
+        } else {
+            entities = messageRepository.findAllForRecipientOrderByReceivedDateDesc(mode, recipientEmail, pageRequest);
         }
 
         return messageListMapper.toMessageList(entities);
