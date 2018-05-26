@@ -21,6 +21,7 @@ package com.spartasystems.holdmail.smtp;
 import com.spartasystems.holdmail.domain.Message;
 import com.spartasystems.holdmail.domain.MessageHeaders;
 import com.spartasystems.holdmail.service.MessageService;
+import okhttp3.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.james.mime4j.Charsets;
@@ -42,10 +43,10 @@ import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class SMTPHandler implements MessageHandler {
-
     private Logger logger = LoggerFactory.getLogger(SMTPHandler.class);
 
     @Autowired
@@ -55,15 +56,21 @@ public class SMTPHandler implements MessageHandler {
     private String senderHost;
     private String senderEmail;
     private List<String> recipients = new ArrayList<>();
+    private final String hookUrl;
+    private final OkHttpClient okHttpClient = new OkHttpClient.Builder()
+            .connectTimeout(2, TimeUnit.SECONDS)
+            .readTimeout(10, TimeUnit.SECONDS)
+            .build();
 
     public SMTPHandler() {
+        hookUrl = "http://127.0.0.1";
     }
 
-    public SMTPHandler(MessageContext ctx) {
+    public SMTPHandler(MessageContext ctx, String hookUrl) {
 
         InetSocketAddress hostAddr = (InetSocketAddress) ctx.getRemoteAddress();
         this.senderHost = hostAddr.getAddress().getHostAddress();
-
+        this.hookUrl = hookUrl;
     }
 
     @Override
@@ -106,7 +113,7 @@ public class SMTPHandler implements MessageHandler {
                     headers
             );
 
-            message.setIsSpam(false);
+            message.setIsSpam(checkIsSpam(data));
             messageService.saveMessage(message);
 
             logger.info(String.format("Stored SMTP message '%s' parse %s to: %s",
@@ -121,6 +128,35 @@ public class SMTPHandler implements MessageHandler {
 
         }
 
+    }
+
+    private boolean checkIsSpam(byte[] mailData) {
+        final RequestBody requestBody = RequestBody.create(MediaType.parse("message/rfc822"), mailData);
+        final Request request = new Request.Builder()
+                .url(hookUrl)
+                .method("POST", requestBody)
+                .build();
+        try {
+            final Response response = okHttpClient.newCall(request).execute();
+            String html = new String(response.body().bytes(), StandardCharsets.UTF_8);
+
+            return html.equals("1");
+        } catch (IOException | NullPointerException e) {
+            logger.error("Failed when check is spam", e);
+        }
+//        new Callback() {
+//
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//
+//
+//            }
+//        });
+        return false;
     }
 
     protected MessageHeaders getHeaders(MimeMessage message) throws MessagingException {

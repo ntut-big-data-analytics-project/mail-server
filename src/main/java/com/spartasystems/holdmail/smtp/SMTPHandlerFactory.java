@@ -19,6 +19,7 @@
 package com.spartasystems.holdmail.smtp;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.stereotype.Component;
 import org.subethamail.smtp.MessageContext;
@@ -29,10 +30,13 @@ public class SMTPHandlerFactory implements org.subethamail.smtp.MessageHandlerFa
     @Autowired
     private AutowireCapableBeanFactory beanFactory;
 
+    @Value("${holdmail.smtp.hook_url:http://127.0.0.1}")
+    private String smtpHookUrl;
+
     @Override
     public SMTPHandler create(MessageContext ctx) {
 
-        SMTPHandler smtpHandler = new SMTPHandler(ctx);
+        SMTPHandler smtpHandler = new SMTPHandler(ctx, smtpHookUrl);
         beanFactory.autowireBean(smtpHandler);
         return smtpHandler;
     }

@@ -34,6 +34,8 @@ spring.h2.console.enabled=false
 # default also is 25000 if this isn't set
 holdmail.smtp.port=25000
 
+# spam detector url
+holdmail.smtp.hook_url = http://127.0.0.1/dump.php
 
 # by default, all forwarded mail comes right back to holdmail
 holdmail.outgoing.smtp.server=localhost
