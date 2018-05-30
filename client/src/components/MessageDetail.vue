@@ -30,7 +30,7 @@
       'bg-danger spam': message.isSpam===true
       }">
         <router-link to="/" class="d-flex">
-          <b-button id="backButton" size="sm" variant="primary">
+          <b-button id="backButton" size="sm" variant="light">
             <span class="fa fa-arrow-left" aria-hidden="true"></span>
           </b-button>
         </router-link>
@@ -67,6 +67,12 @@
               </ul>
             </td>
           </tr>
+        <tr class="message-action">
+          <td colspan="3" class="text-right">
+            <button class="btn btn-outline-danger" v-if="!message.isSpam" @click="updateIsSpam(true)">這是垃圾信</button>
+            <button class="btn btn-outline-dark" v-if="message.isSpam" @click="updateIsSpam(false)">這是不是垃圾信</button>
+          </td>
+        </tr>
       </table>
       <b-tabs :no-fade="true" ref="tabs">
         <b-tab id="html-body" title="HTML" :disabled="!message.messageHasBodyHTML">
@@ -113,22 +119,7 @@ export default {
     prettyBytes: filters.prettyBytes
   },
   mounted () {
-    const messageId = this.$route.params.messageId
-
-    messagesApi.getMessageDetail(messageId)
-      .then((response) => {
-        this.message = response.data
-      })
-      .catch(() => {
-        console.log('Service failed to query message detail')
-      });
-    messagesApi.getMessageRaw(messageId)
-      .then((response) => {
-        this.rawText = response.data
-      })
-      .catch(() => {
-        console.log('Service failed to query message detail')
-      });
+    this.loadMessage()
   },
   watch: {
     message () {
@@ -178,6 +169,24 @@ export default {
     }
   },
   methods: {
+    loadMessage(){
+      const messageId = this.$route.params.messageId
+
+      messagesApi.getMessageDetail(messageId)
+        .then((response) => {
+          this.message = response.data
+        })
+        .catch(() => {
+          console.log('Service failed to query message detail')
+        });
+      messagesApi.getMessageRaw(messageId)
+        .then((response) => {
+          this.rawText = response.data
+        })
+        .catch(() => {
+          console.log('Service failed to query message detail')
+        });
+    },
     forwardMail () {
       this.$validator.validateAll()
         .then(() => {
@@ -199,6 +208,12 @@ export default {
     },
     countDownChanged (dismissCountDown) {
       this.dismissCountDown = dismissCountDown
+    },
+    updateIsSpam(val){
+      messagesApi.updateIsSpam(this.message.messageId, val)
+        .then(r => {
+          this.loadMessage();
+        });
     },
     setTab (index) {
       this.$nextTick(() => {

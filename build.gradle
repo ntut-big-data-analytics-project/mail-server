@@ -61,6 +61,7 @@ dependencies {
     compile 'org.apache.james:apache-mime4j:0.8.1'
     compile 'org.flywaydb:flyway-core:5.0.3'
     compile 'com.squareup.okhttp3:okhttp:3.10.0'
+    compile 'org.apache.commons:commons-compress:1.16.1'
 
 
     testCompile 'org.assertj:assertj-core:3.8.0'

@@ -19,11 +19,13 @@
 package com.spartasystems.holdmail.persistence;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -40,8 +42,16 @@ public interface MessageRepository extends CrudRepository<MessageEntity, Long> {
             Pageable pageable
     );
 
+    @Query("SELECT m FROM MessageEntity m order by m.receivedDate desc")
+    List<MessageEntity> getAllMessages();
+
     Stream<MessageEntity> findBySubject(String subject, Pageable pageable);
 
     Stream<MessageEntity> findBySenderEmail(String senderEmail, Pageable pageable);
+
+    @Query("UPDATE MessageEntity m SET m.isSpam = :val WHERE m.messageId = :id")
+    @Modifying
+    @Transactional
+    void updateSpamValid(@Param("id") long id, @Param("val") boolean val);
 
 }

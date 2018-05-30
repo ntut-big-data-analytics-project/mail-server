@@ -1,0 +1,1 @@
+ALTER TABLE message MODIFY COLUMN received_date timestamp NOT NULL DEFAULT current_timestamp(3) AFTER `sender_email`;

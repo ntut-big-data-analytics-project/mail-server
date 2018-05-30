@@ -59,6 +59,10 @@ public class MessageService {
         return messageMapper.toDomain(entity);
     }
 
+    public void updateMessageSpamFlag(long messageId, boolean val) {
+        messageRepository.updateSpamValid(messageId, val);
+    }
+
     public void deleteMessage(Long id) {
         messageRepository.delete(id);
     }
@@ -85,6 +89,10 @@ public class MessageService {
         }
 
         return messageListMapper.toMessageList(entities);
+    }
+
+    public List<MessageEntity> listMessages() {
+        return messageRepository.getAllMessages();
     }
 
     public void forwardMessage(long messageId, @NotBlank @Email String recipientEmail) {

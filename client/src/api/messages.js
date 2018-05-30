@@ -45,5 +45,10 @@ export default {
     const url = `${MESSAGES_ENDPOINT}/${messageId}/forward`
 
     return axios.post(url, {recipient: recipientEmail})
+  },
+  updateIsSpam (messageId, isSpam) {
+    const url = `${MESSAGES_ENDPOINT}/${messageId}/spam`
+
+    return axios.put(url, {spam:isSpam})
   }
 }
