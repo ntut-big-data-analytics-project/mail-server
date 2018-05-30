@@ -27,7 +27,6 @@ import com.spartasystems.holdmail.model.MessageList;
 import com.spartasystems.holdmail.model.MessageSummary;
 import com.spartasystems.holdmail.persistence.MessageEntity;
 import com.spartasystems.holdmail.service.MessageService;
-import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
@@ -43,6 +42,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -117,12 +117,12 @@ public class MessageController {
     @RequestMapping(value = "/download")
     public ResponseEntity getAllMessages() {
         final List<MessageEntity> list = messageService.listMessages();
-        ByteOutputStream fOut = null;
+        ByteArrayOutputStream fOut = null;
         BufferedOutputStream bOut = null;
         GzipCompressorOutputStream gzOut = null;
         TarArchiveOutputStream tOut = null;
         try {
-            fOut = new ByteOutputStream();
+            fOut = new ByteArrayOutputStream((1 << 20) * 128);
             bOut = new BufferedOutputStream(fOut);
             gzOut = new GzipCompressorOutputStream(bOut);
             tOut = new TarArchiveOutputStream(gzOut);
@@ -179,7 +179,7 @@ public class MessageController {
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("application/tar+gzip"))
                 .header("Content-Disposition", "attachment;" + " filename=\"messages.tar.gz\";")
-                .body(fOut.getBytes());
+                .body(fOut.toByteArray());
     }
 
     @RequestMapping(value = "/{messageId}/content/{contentId}")

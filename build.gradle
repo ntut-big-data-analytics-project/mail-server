@@ -241,7 +241,7 @@ test {
 }
 
 // test.dependsOn testUI
-// compileJava.dependsOn('buildUI')
+compileJava.dependsOn('buildUI')
 // tasks.build.dependsOn('buildRpm')
 
 task srcJAR(type: Jar) {
