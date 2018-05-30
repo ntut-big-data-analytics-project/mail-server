@@ -37,10 +37,13 @@
                     </button>
                 </span>
           </div>
-
           <div class="row">
             <div class="col">
               <p></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
               <div class="btn-group input-group" role="group" aria-label="...">
                 <button type="button" class="btn" @click="changeMode(-1)" :class="{
                   'btn-default': mode!==-1,
@@ -58,6 +61,14 @@
                 }">垃圾信件
                 </button>
               </div>
+            </div>
+            <div class="col text-right">
+              <a href="./rest/messages/download" class="btn btn-outline-success">Download All Emial</a>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <p></p>
             </div>
           </div>
         </form>
