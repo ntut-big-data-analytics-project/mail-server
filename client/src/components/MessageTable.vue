@@ -63,7 +63,7 @@
               </div>
             </div>
             <div class="col text-right">
-              <a href="./rest/messages/download" class="btn btn-outline-success">Download All Emial</a>
+              <a href="./rest/messages/download" class="btn btn-outline-success">Download All Email</a>
             </div>
           </div>
           <div class="row">
